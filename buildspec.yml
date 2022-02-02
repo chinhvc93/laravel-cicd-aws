@@ -1,34 +1,19 @@
 version: 0.2
+
 phases:
-   install:
-     runtime-versions:
-         php: 7.3
-         #nodejs: 12.x
-     commands:
-      - |
-          amazon-linux-extras install php7.3 -y
-          yum install -y php-mbstring php-xml php-bcmath
-
-          curl -sS https://getcomposer.org/installer | php
-          cp composer.phar /usr/local/bin/composer
-          ln -s /usr/local/bin/composer /usr/bin/composer
-
-          yum install -y git
-          yum install -y zip unzip
-	  - echo "Done install"
-   pre_build:
-     commands:
-         - cp .env.example .env
-         - composer install
-         #- npm install
-   build:
-     commands:
-		 - composer install --verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader
-		 - vendor/bin/phpunit  #run unit test
-artifacts:
-   files:
-         - '**/*'
-   name: $(date +%Y-%m-%dT%H:%M:%S).zip
-proxy:
-   upload-artifacts: yes
-   logs: yes
+ install: 
+   runtime-versions:
+     php: 7.3
+ pre_build: # commands to be run before build
+   commands:
+   - echo Logging
+   - aws --version
+ build:
+   commands:
+   - echo Build started on `date`
+   - echo installing composer..
+   - composer install
+   - echo creating .env file..
+   - cp .env.example .env
+   - echo generating app key
+   - php artisan key:generate
