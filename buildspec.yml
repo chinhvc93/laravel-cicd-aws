@@ -17,3 +17,11 @@ phases:
    - cp .env.example .env
    - echo generating app key
    - php artisan key:generate
+   - vendor/bin/phpunit  #run unit test
+artifacts:
+   files:
+         - '**/*'
+   name: $(date +%Y-%m-%dT%H:%M:%S).zip
+proxy:
+   upload-artifacts: yes
+   logs: yes
